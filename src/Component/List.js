@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./List.css";
 import Card from "./Card";
 import DaftarBelanja from "./DaftarBelanja";
@@ -38,6 +38,7 @@ class List extends React.Component {
       harga: "",
       image: "",
       total: "",
+      selectedItem: null,
       action: "",
     };
   }
@@ -62,7 +63,7 @@ class List extends React.Component {
         subtotal: this.state.harga * 1,
       });
     } else if (this.state.action === "update") {
-      let index = temp.findIndex((item) => item.nama === this.state.nama);
+      let index = temp.indexOf(this.state.selectedItem);
 
       temp[index].nama = this.state.nama;
       temp[index].harga = this.state.harga;
@@ -72,10 +73,6 @@ class List extends React.Component {
     this.setTotal();
 
     $("#modal").modal("hide");
-  };
-
-  bind = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
   };
 
   Plus = async (index) => {
@@ -102,6 +99,7 @@ class List extends React.Component {
       harga: item.harga,
       image: item.image,
       action: "update",
+      selectedItem: item,
     });
   };
 
@@ -200,31 +198,31 @@ class List extends React.Component {
               <div className="modal-header bg-dark text-white">
                 <h5>Form Agenda</h5>
               </div>
-              <form onSubmit={this.SaveKeranjang}>
+              <form onSubmit={(event) => this.SaveKeranjang(event)}>
                 <div className="modal-body">
                   Nama Barang
                   <input
                     type="text"
-                    name="nama"
                     className="form-control"
-                    onChange={this.bind}
+                    onChange={(ev) => this.setState({ nama: ev.target.value })}
                     value={this.state.nama}
+                    required
                   />
                   Harga
                   <input
                     type="text"
-                    name="harga"
                     className="form-control"
-                    onChange={this.bind}
+                    onChange={(ev) => this.setState({ harga: ev.target.value })}
                     value={this.state.harga}
+                    required
                   />
                   Image
                   <input
-                    type="text"
-                    name="image"
+                    type="url"
                     className="form-control"
-                    onChange={this.bind}
+                    onChange={(ev) => this.setState({ image: ev.target.value })}
                     value={this.state.image}
+                    required
                   />
                 </div>
                 <div className="modal-footer">
